@@ -8,7 +8,7 @@ function Landingpage() {
             <h1>
                 Bienvenidos a la DOG PAGE 
             </h1>
-            <Link to = "/home" >
+            <Link to = "/dogs" >
             <button>Ingresar</button>
             </Link>
             

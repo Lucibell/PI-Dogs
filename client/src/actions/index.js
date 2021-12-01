@@ -21,6 +21,7 @@ export function getNameDog(name) {
         } }
     }
 
+    
 export function getTemps(){
     return async function (dispatch) {
         var temps = await axios.get('http://localhost:3001/temperament',{});
@@ -48,12 +49,18 @@ export function getIdDog(id) {
     }
 }
 
-
-export function createdOrApiFilter (payload) {
+export function createdOrApiFilter(payload) {
     return {
-    type:"DB_OR_API_FILTER",
-    payload
+        type: "DB_OR_API_FILTER",
+        payload
+    }
 }
+
+export function tempFilter (payload) {
+    return {
+        type: "TEMP_FILTER",
+        payload,    
+    }
 }
 
 export function orderByName (payload) {

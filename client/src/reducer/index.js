@@ -20,7 +20,7 @@ export default function rootReducer(state= initialState, action) {
         case "GET_NAME_DOG":
             return {
                 ...state,
-                allDogs: action.payload // Es como un filtro por name del query q esta hecho en el back directamente. Aca no hay q hacer lógica.
+                dogsLoaded: action.payload // Es como un filtro por name del query q esta hecho en el back directamente. Aca no hay q hacer lógica.
             }
 
         case "GET_TEMPS":
@@ -28,7 +28,7 @@ export default function rootReducer(state= initialState, action) {
                 ...state,
                 temperaments: action.payload
             }
-
+            
         case "POST_DOG":
             return {
                 ...state
@@ -48,6 +48,23 @@ export default function rootReducer(state= initialState, action) {
             return {
                 ...state,
                 dogsLoaded: db_or_api_filter
+            }
+
+        case "TEMP_FILTER":
+            const dogs = state.allDogs
+            let temp_filtered = dogs.filter(e => {
+                if (e.temperament) { // bendito filtro.. esta es para la info de la Api
+                    return e.temperament.includes(action.payload) // Como es un string queremos q incluya al payload
+                }
+                if (e.temperaments) { // esta es para la info de la db. Como viene en un array se mapea por el nombre y si coincide con el payload lo filtra. 
+                    return e.temperaments.map((e) => e.name === action.payload)
+                }
+                return null
+            })
+
+            return {
+                ...state,
+                dogsLoaded:temp_filtered
             }
 
 

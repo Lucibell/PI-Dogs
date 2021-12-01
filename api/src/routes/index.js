@@ -36,16 +36,7 @@ router.use(express.json())
         return dogApi
     }
     
-    
-
-
-
-
-
-
-
-
-    
+  
     // Funcion para traer la info de la base de datos
     const getDataDb = async () => {
         const dogsDb= await Dog.findAll ({
@@ -109,7 +100,15 @@ router.use(express.json())
             
     // Post de dog 
     router.post('/dog', async (req,res) => { 
-        let {name, height_min, height_max, weight_min, weight_max, temperament, life_span, image, createdInDb}= req.body
+        let {name, 
+            height_min, 
+            height_max, 
+            weight_min, 
+            weight_max, 
+            temperament, 
+            life_span, 
+            image, 
+            createdInDb}= req.body
                
         // Creo la nueva raza en la BD
         let createdDog = await Dog.create ({
