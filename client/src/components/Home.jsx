@@ -1,18 +1,62 @@
 import React from 'react'
+import styled from 'styled-components'
 import {useState, useEffect} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {getDogs, createdOrApiFilter, orderByName, orderByWeight, getTemps,tempFilter} from "../actions" 
 import { Link } from 'react-router-dom'
+import NavBar from './NavBar'
 import DogCard from './DogCard'
 import Paginado from './Paginado'
 import SearchBar from './SearchBar'
+import dober from "../assets/doberman.jpg" 
+
+const Filtros = styled.div `
+    background-color:#23dbbc;
+    height: 100px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+`
+const Select = styled.select `
+    display: inline-flex;
+    font-family:"Indie Flower", cursive;
+    height: 30px ;
+    width: 120px;
+    margin: 10px; 
+    border-radius: 10px;
+    
+`
+const H3 =styled.h3`
+    display:inline-flex;
+
+`
+const H2 = styled.h2 `
+    display: inline-flex;
+    margin-right:20px;
+    margin-left:40px;
+    font-weight:bold;
+   
+`
+const DivCard = styled.div`
+    display : flex;
+    justify-content: center;
+    margin:10px;
+`
+const DivCards = styled.div`
+    display : flex;
+    flex-wrap: wrap;
+    margin:30px;
+    justify-content : center;
+`
+
+
 
 
 export default function Home() {
  
     const dispatch = useDispatch() // para ir despachando las acciones
-    const allDogs = useSelector ( (state) => state.dogsLoaded) // reemplace el mapStateToProps. Todo lo q esta en el estado de la action de dogsLoaded traelo. 
-    const temperaments = useSelector(state => state.temperaments)
+    const allDogs = useSelector ( (state) => state.dogsLoaded)// reemplace el mapStateToProps. Todo lo q esta en el estado de la action de dogsLoaded traelo. 
+    const temperaments = useSelector(state => state.temperaments) 
     const [orderName, setOrderName]=useState("")
     const [orderWeight, setOrderWeight]=useState("")
 
@@ -34,14 +78,10 @@ export default function Home() {
     }, [dispatch])
 
     useEffect (()=> {
-        dispatch(getTemps()) // se despacha la action de traerte todos los temperamentos para el filtrado
+        dispatch(getTemps()) // se despacha la action de traerte todos los temperamentos para el filtrado y q se vean cdo se monta el home
     }, [dispatch])
 
-    function handleOnClick(e) { // es para un boton q traiga todos los perros de nuevo. Resetea
-        e.preventDefault();
-        dispatch(getDogs())
-    }
-
+    
     function handleOnFilterDborApi (e) {
         e.preventDefault()
         dispatch(createdOrApiFilter(e.target.value))
@@ -68,52 +108,69 @@ export default function Home() {
             
     return (
         <div>
-            <Link to="/dog">Create Dog</Link>
-            <h1>DoggieWorld</h1>
-            <button onClick={(e) => { handleOnClick(e) }}> Home - Vuelve a cargar los perros</ button>
-            <div>
-                <select onChange={(e) => { handleOnOrderName(e) }}>
+            
+            <NavBar />
+
+            <Filtros>
+                <H2>ORDER BY: </H2>
+                <H3> A-Z</H3>
+                <Select onChange={(e) => { handleOnOrderName(e) }}>
                     <option value="asc">A-Z</option>
                     <option value="desc">Z-A</option>
-                </select>
+                </Select>
 
-                <select onChange={(e) => { handleOnOrderWeight(e) }} >
-                    <option value="w.asc">Weight-asc</option>
-                    <option value="w.desc">Weight-desc</option>
-                </select>
+                <H3> WEIGHT</H3>
+                <Select onChange={(e) => { handleOnOrderWeight(e) }} >
+                    <option value="w.asc">Asc</option>
+                    <option value="w.desc">Desc</option>
+                </Select>
 
-                <select onChange={(e) => { handleOnFilterDborApi(e) }}>
+                <H2>FILTER BY: </H2>
+                <H3> DB OR API</H3>
+                <Select onChange={(e) => { handleOnFilterDborApi(e) }}>FILTER
                     <option value="all">All</option>
                     <option value="createddogs">CreatedDogs</option>
                     <option value="apidogs">ApiDogs</option>
-                </select>
+                </Select>
 
-
-                <select onChange={handleOnFilterTemp}>
+                <H3> TEMPERAMENT</H3>
+                <Select onChange={handleOnFilterTemp}>
                     {temperaments.map((temp) => (
                         <option value={temp.name}>{temp.name}</option>
                     ))}
-                </select>
-            </div>
-
-
-            <Paginado allDogs={allDogs.length} paginado={paginado} dogsPerPage={dogsPerPage} />
+                </Select>
+            
+            </Filtros>
 
             <SearchBar />
 
+            <Paginado 
+                allDogs={allDogs.length} 
+                paginado={paginado} 
+                dogsPerPage={dogsPerPage} />
+
+            <DivCards>
+                
             {
                 actualDogs?.map((e) => {
                     return (
-                        <div className="cards">
-                            <Link to={"/dogs/" + e.id}>
-                                <DogCard key={e.id} name={e.name} image={e.image ? e.image : <img src='https://www.1zoom.me/big2/76/74640-ilonka.jpg' />} temperament={e.temperament} weight_min={e.weight_min} weight_max={e.weight_max} />
+                        <DivCard>
+                            <Link to={"/dogs/" + e.id} style={{textDecoration:"none" , color:"black"}}>
+                                <DogCard 
+                                    key={e.id} 
+                                    name={e.name} 
+                                    image={e.image ==="" ? <img src={dober} /> : e.image}
+                                    temperament={e.temperament ? e.temperament : e.temperaments.map ((temp)=> temp.name + (" "))} 
+                                    weight_min={e.weight_min} 
+                                    weight_max={e.weight_max} />
                             </Link>
-                        </div>
+                        </DivCard>
 
                     )
                 }
                 )
             }
+            </DivCards>
 
         </div>
     )

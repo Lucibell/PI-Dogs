@@ -19,8 +19,7 @@ router.use(express.json())
              // const dataApi= await fetch(url) ;
              // const dataDog= await dataApi.json();
         const dogApi= await dataDogs.data.map((e) => {
-                       
-            
+                      
             return {
                 name:e.name,
                 id:e.id,

@@ -2,34 +2,115 @@ import React, {useState, useEffect} from "react"
 import {Link , useNavigate } from "react-router-dom"
 import { getTemps, postDog } from "../actions"
 import { useDispatch, useSelector } from "react-redux"
+import styled from "styled-components"
+import img from "../assets/perrito.jpg"
+
+const DivFondo = styled.div`
+    background-image:url(${img});
+    background-size:contain;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+`
+
+const DivPpal = styled.div`
+     border-style: solid;
+    border-color:black;
+    height:500px;
+    width: 380px;
+    background:linear-gradient(#23dbbc, #ebe0e0);
+
+    border-radius:10px;
+    /* display:flex; */
+    position:absolute;
+    right:34%;
+    top:8%;
+    `
+
+const Label = styled.label `
+    font-size: 20px;
+    font-weight:bold;
+`
+
+const ButtonCB =styled.button `
+    font-family:"Indie Flower", cursive;
+    /* margin-top:40px; */
+    font-weight:bold;
+    font-size:20px;
+    padding: 10px;
+    background-color: #007ac1;
+    border:none; 
+    width:auto;
+    border-radius:40px;
+    color:#FFF;
+    position:absolute;
+    left:10%;
+    top:85%;
+    `
+const ButtonC = styled.button `
+    font-family:"Indie Flower", cursive;
+    font-weight:bold;
+    font-size:20px;
+    padding: 10px;
+    background-color: #007ac1;
+    border:none; 
+    width:auto;
+    border-radius:40px;
+    color:#FFF;
+    position:absolute;
+    left:75%;
+    top:85%;  
+`
+const Input = styled.input`
+    display: inline-flex;
+    font-family:"Indie Flower";
+    font-size:18px;
+    height: 20px ;
+    width: 200px;
+    border-radius: 5px;
+`
+const P = styled.p`
+    color:red;
+    font-weight:bold;
+`
+const Select = styled.select `
+    font-family:"Indie Flower";
+    font-size:18px;
+    height: 30px ;
+    width: 200px;
+    border-radius: 5px;
+    margin-top:5px;
+`
+
+const DivTemp = styled.div`
+    display:inline-flex;
+    margin-left: 10px;
+    /* flex-direction: row; */
+    
+`
+const Ptemp= styled.p`
+    margin-left: 15px;
+
+`
 
 function validate(input) { // declaro una funcion del form de cada uno de los inputs. 
     let errors = {};
     if (input.name === "") {
-        errors.name = 'A dog name is required';
-    }
-    
-    if (input.height_min === "") {
+        errors.name = 'A dog name is required'; }    
+    else if (input.height_min === "") {
         // console.log("height_min", typeof(input.height_min))
         errors.height_min = 'Minimun height is required';
-    }
-
-    if (input.height_max === "") {
+    } else if (input.height_max === "") {
         errors.height_max = 'Maximun height is required';
-    }
-
-    if (input.weight_min === "") {
+    } else if (input.weight_min === "") {
         errors.weight_min = 'Minimun weight is required';
-    }
-
-    if (input.weight_max === "") {
+    } else if (input.weight_max === "") {
         errors.weight_max = 'Maximun weight must be a number';
-    }
-
-    if (input.life_span === "") {
+    } else if (input.life_span === "") {
         errors.life_span = 'Life_span is required';
-    }
-    
+    }     
     return errors;
    };
   
@@ -52,7 +133,7 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
     })
     
     const [errors, setErrors]=useState({}) // Metes los errores en un estado porq depende del input
-   // console.log(errors)
+    const [error, setError]= useState(false)
     function handleOnChange (e) {  // El input va variando segun lo q ponga el usuario y va cambiando su estado. 
         setInput ({
             ...input,
@@ -76,18 +157,20 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
     }
     
     
-    function handleTempDelete(e) {
-        setInput ({
-            ...input,
-            temperament: input.temperament.filter((temp)=> temp !== e )
-        })
-    }
+    // function handleTempDelete(e) {
+    //     setInput ({
+    //         ...input,
+    //         temperament: input.temperament.filter((temp)=> temp !== e )
+    //     })
+    // }
     
     function handleOnSubmit (e) { // Se Despacha la accion q manda a crear el dog al back. 
         e.preventDefault()
-        
-        
-        
+        if (input.name==="" || input.height_min==="" || input.height_max==="" || input.weight_min==="" || input.weight_max==="" ) {
+            setError(true)
+            return 
+        } else 
+        setError (false)
         dispatch(postDog(input))
         alert("Dog created succesfully") // esto cambiarlo
         setInput({   // retorna todo a 0
@@ -106,100 +189,100 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
 
     useEffect (()=> {
         dispatch(getTemps()) // se despacha la action de traerte todos los temperamentos de los perros. 
-        
     }, [dispatch])
 
 
     return (
-         <div>
+        <DivFondo>
+         <DivPpal>
             <Link to= '/dogs'> 
-            <button>Volver</button>
+            <ButtonCB>Go Back</ButtonCB>
             </Link>
-            <h1>Create your dog</h1>
+            <h1>Create your Dog's Breed</h1>
             <form onSubmit= {(e)=>handleOnSubmit(e)}>
+               <P> {error ? "You must complete name, weight and height" : null} </P>
                 <div>
-                <label>Name: </label>
-                <input 
+                <Label>Name: </Label>
+                <Input 
                     type="text"
                     value={input.name}
                     name="name"
                     onChange={(e)=>handleOnChange(e)}
                 />
                  {errors.name && (
-                    <p className='error'>{errors.name}</p>
+                    <P>{errors.name}</P>
                 )}
                 </div>
 
                 <div>    
-                <label>Min height: </label>
-                <input
+                <Label>Min height: </Label>
+                <Input
                     type="number"
                     value={input.height_min}
                     name="height_min"
                     onChange={(e)=>handleOnChange(e)}
                 />
                 {errors.height_min && (
-                    <p className='error'>{errors.height_min}</p>
+                    <P>{errors.height_min}</P>
                 )}
                 
                 </div>
 
                 <div>
-                <label>Max height: </label>
-                <input
-                    
+                <Label>Max height: </Label>
+                <Input
                     type="number"
                     value={input.height_max}
                     name="height_max"
                     onChange={(e)=>handleOnChange(e)}
                 />
                 {errors.height_max && (
-                    <p className='error'>{errors.height_max}</p>
+                    <P>{errors.height_max}</P>
                 )}
                 </div>
 
                 <div>
-                <label>Min weight: </label>
-                <input
+                <Label>Min weight: </Label>
+                <Input
                     type="number"
                     value={input.weight_min}
                     name="weight_min"
                     onChange={(e)=>handleOnChange(e)}
                 />
                 {errors.weight_min && (
-                    <p className='error'>{errors.weight_min}</p>
+                    <P>{errors.weight_min}</P>
                 )}
                 </div>
                 
                 <div>
-                <label>Max weight: </label>
-                <input
+                <Label>Max weight: </Label>
+                <Input
                     type="number"
                     value={input.weight_max}
                     name="weight_max"
                     onChange={(e)=>handleOnChange(e)}
                 />
                 {errors.weight_max && (
-                    <p className='error'>{errors.weight_max}</p>
+                    <P>{errors.weight_max}</P>
                 )}
                 </div>
 
                 <div>
-                <label>Life span: </label>
-                <input
+                <Label>Life span: </Label>
+                <Input
                     type="text"
                     value={input.life_span}
                     name="life_span"
                     onChange={(e)=>handleOnChange(e)}
                 />
                 {errors.life_span && (
-                    <p className='error'>{errors.life_span}</p>
+                    <P>{errors.life_span}</P>
                 )}
                 </div>
 
                 <div>
-                <label>Image: </label>
-                <input
+                <Label>Image: </Label>
+                <Input
                     type="text"
                     value={input.image}
                     name="image"
@@ -209,33 +292,35 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
                 </div>
 
                 <div>
-                <label>Temperaments: </label>
-                <input
+                <Label>Temperaments: </Label>
+                <Input
                     type="text"
                     value={input.temperament}
                     name="temperament"
                 />
                 </div>
 
-                <select onChange={handleOnSelector}>
+                <Select onChange={handleOnSelector}>
                     {temperaments.map((temp) => (
                         <option value={temp.name}>{temp.name}</option> 
                     ))}
-                </select>
-                <button type="submit" 
-               //disabled={Object.keys(errors).length ? true: false}
-               > Create Dog </button>
+                </Select>
+                <ButtonC type="submit" 
+                //disabled={Object.keys(errors).length ? true: false}
+               > Create </ButtonC>
 
             </form>
+            <DivTemp>
                 {input.temperament.map(e => 
-                    <div className="eliminado">
-                        <p>{e}</p>
-                        <button className="botonX" onClick={(e)=>handleTempDelete(e)}>x</button>
-
+                    <div>
+                        <Ptemp>{e}</Ptemp>
+                        {/* <button onClick={(e)=>handleTempDelete(e)}>x</button> */}
                     </div>
-                                        
+                                   
                     )}
-         </div>   
+            </DivTemp>
+         </DivPpal>  
+         </DivFondo> 
 
 )
 

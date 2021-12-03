@@ -1,4 +1,17 @@
 import React from 'react'
+import styled from 'styled-components'
+
+const Button = styled.button`
+    font-size: 20px;
+    font-family:"Indie Flower", cursive;
+    margin:3px;
+    width:45px;
+    border-radius: 9999px;
+    /* font-weight:bold; */
+
+
+`
+
 
 function Paginado({allDogs, paginado, dogsPerPage}) {
     const pageNumbers = []
@@ -10,9 +23,9 @@ function Paginado({allDogs, paginado, dogsPerPage}) {
 
     return (
         <nav>
-            <ul className="paginado">
+            <ul>
                 {pageNumbers?.map(number=> ( 
-                   <a key={number} onClick={()=>paginado(number)}> {number} </a>
+                   <Button key={number} onClick={()=>paginado(number)}> {number} </Button>
                      ))}
             </ul>
         </nav>
