@@ -55,21 +55,28 @@ function SearchBar() {
 
  const dispatch = useDispatch()
  const [nameDog, setNameDog] = useState('')
+ const [notFound, setNotFound] = useState(false)
 
 function handleChangeInput(e) {
     e.preventDefault()
     setNameDog(e.target.value) //COn esto va variando el valor del estado segun lo que vaya poniendo el usuario
-    //setNameDog("")
+    
     
     //console.log(nameDog)
 }
 
 function handleSubmit(e) {
     e.preventDefault()
-    dispatch(getNameDog(nameDog))
+    dispatch(getNameDog(nameDog)) //nameDOg
 
-    // console.log(getNameDog(nameDog))
-}
+//    if (typeof (nameDog)==="number") {
+//     setNotFound(true)
+//    } else
+//     dispatch(getNameDog(nameDog)) //nameDOg
+// //setNameDog(' ')
+   }
+//     // console.log(getNameDog(nameDog))
+
 
     return (
         <Div>
@@ -85,6 +92,7 @@ function handleSubmit(e) {
                 type="submit"
                 onClick={(e) =>handleSubmit(e)}><FcSearch/>
             </Button>
+            {/* <p>{notFound ? "The breed you wrote doesn´t exist" : null}</p> */}
             
             
         </Div>

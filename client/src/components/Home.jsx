@@ -8,7 +8,7 @@ import NavBar from './NavBar'
 import DogCard from './DogCard'
 import Paginado from './Paginado'
 import SearchBar from './SearchBar'
-import dober from "../assets/doberman.jpg" 
+//import dober from "../assets/doberman.jpg" 
 
 const Filtros = styled.div `
     background-color:#23dbbc;
@@ -50,8 +50,6 @@ const DivCards = styled.div`
 `
 
 
-
-
 export default function Home() {
  
     const dispatch = useDispatch() // para ir despachando las acciones
@@ -62,7 +60,6 @@ export default function Home() {
 
     //Paginador
     const [paginaActual, setPaginaActual]=useState(1)
-    //const [dogsPerPage, setdogsPerPage]=useState(8)
     const dogsPerPage=8
     const indexofLastDog = paginaActual * dogsPerPage
     const indexofFirstDog = indexofLastDog - dogsPerPage
@@ -135,8 +132,8 @@ export default function Home() {
 
                 <H3> TEMPERAMENT</H3>
                 <Select onChange={handleOnFilterTemp}>
-                    {temperaments.map((temp) => (
-                        <option value={temp.name}>{temp.name}</option>
+                    {temperaments.map((temp) => ( 
+                        <option key={temp.name} value={temp.name}>{temp.name}</option>
                     ))}
                 </Select>
             
@@ -159,8 +156,8 @@ export default function Home() {
                                 <DogCard 
                                     key={e.id} 
                                     name={e.name} 
-                                    image={e.image ==="" ? <img src={dober} /> : e.image}
-                                    temperament={e.temperament ? e.temperament : e.temperaments.map ((temp)=> temp.name + (" "))} 
+                                    image={e.image}
+                                    temperament={e.temperament ? e.temperament : e.temperaments && e.temperaments.map ((temp)=> temp.name + (", "))} 
                                     weight_min={e.weight_min} 
                                     weight_max={e.weight_max} />
                             </Link>

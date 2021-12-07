@@ -65,7 +65,7 @@ const ButtonC = styled.button `
 `
 const Input = styled.input`
     display: inline-flex;
-    font-family:"Indie Flower";
+    font-family:"Raleway";
     font-size:18px;
     height: 20px ;
     width: 200px;
@@ -76,7 +76,7 @@ const P = styled.p`
     font-weight:bold;
 `
 const Select = styled.select `
-    font-family:"Indie Flower";
+    font-family:"Raleway";
     font-size:18px;
     height: 30px ;
     width: 200px;
@@ -90,29 +90,38 @@ const DivTemp = styled.div`
     /* flex-direction: row; */
     
 `
+const Div2=styled.div`
+    display:inline-flex;
+    align-items:center;
+    margin-right:3px;
+    
+`
 const Ptemp= styled.p`
     margin-left: 15px;
-
+    font-family:"Raleway";
+`
+const ButtonX=styled.button`
+    height:30px;
+    border-radius:9999px;
 `
 
 function validate(input) { // declaro una funcion del form de cada uno de los inputs. 
     let errors = {};
     if (input.name === "") {
-        errors.name = 'A dog name is required'; }    
-    else if (input.height_min === "") {
-        // console.log("height_min", typeof(input.height_min))
-        errors.height_min = 'Minimun height is required';
-    } else if (input.height_max === "") {
-        errors.height_max = 'Maximun height is required';
-    } else if (input.weight_min === "") {
-        errors.weight_min = 'Minimun weight is required';
-    } else if (input.weight_max === "") {
-        errors.weight_max = 'Maximun weight must be a number';
-    } else if (input.life_span === "") {
-        errors.life_span = 'Life_span is required';
-    }     
+        errors.name = 'A dog name is required';
+    } else if (input.height_min === "" || input.height_min <= 0) {
+        errors.height_min = 'Height min is required and has to be different of 0 and positive';
+    } else if (input.height_max === ""|| input.height_max <= 0) {
+        errors.height_max = 'Maximun height is required and has to be different of 0 and positive';
+    } else if (input.weight_min === "" || input.weight_min <= 0) {
+        errors.weight_min = 'Minimun weight is required and has to be different of 0 and positive';
+    } else if (input.weight_max === "" || input.weight_max <= 0) {
+        errors.weight_max = 'Maximun weight is required and has to be different of 0 and positive';
+    } else if (input.life_span === "" || input.life_span <= 0) {
+        errors.life_span = 'Life_span is required and has to be different of 0 and positive';
+    }
     return errors;
-   };
+};
   
 
  export default function DogCreate() {
@@ -134,6 +143,7 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
     
     const [errors, setErrors]=useState({}) // Metes los errores en un estado porq depende del input
     const [error, setError]= useState(false)
+
     function handleOnChange (e) {  // El input va variando segun lo q ponga el usuario y va cambiando su estado. 
         setInput ({
             ...input,
@@ -145,8 +155,7 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
             ...errors,
             [e.target.name] : e.target.value
           }))
-        // console.log(errors)
-        //  console.log(input)
+        
     }
     
     function handleOnSelector (e) {  // Para el selector de las temperaments, el usuario va eligiendo el q quiere. 
@@ -157,22 +166,23 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
     }
     
     
-    // function handleTempDelete(e) {
-    //     setInput ({
-    //         ...input,
-    //         temperament: input.temperament.filter((temp)=> temp !== e )
-    //     })
-    // }
-    
+    function handleTempDelete(e) {
+        setInput ({
+            ...input,
+            temperament: input.temperament.filter((temp)=> temp !== e )
+        })
+    }
+
+        
     function handleOnSubmit (e) { // Se Despacha la accion q manda a crear el dog al back. 
         e.preventDefault()
-        if (input.name==="" || input.height_min==="" || input.height_max==="" || input.weight_min==="" || input.weight_max==="" ) {
+        if (input.name==="" || input.height_min==="" || input.height_max==="" || input.weight_min==="" || input.weight_max==="" || input.life_span==="" ) {
             setError(true)
             return 
         } else 
         setError (false)
         dispatch(postDog(input))
-        alert("Dog created succesfully") // esto cambiarlo
+        alert("Dog created succesfully") 
         setInput({   // retorna todo a 0
             name:"",
             image:"",
@@ -200,7 +210,7 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
             </Link>
             <h1>Create your Dog's Breed</h1>
             <form onSubmit= {(e)=>handleOnSubmit(e)}>
-               <P> {error ? "You must complete name, weight and height" : null} </P>
+               <P> {error ? "You must complete name, weight, height and life span" : null} </P>
                 <div>
                 <Label>Name: </Label>
                 <Input 
@@ -309,13 +319,15 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
                 //disabled={Object.keys(errors).length ? true: false}
                > Create </ButtonC>
 
+                
+
             </form>
             <DivTemp>
                 {input.temperament.map(e => 
-                    <div>
+                    <Div2>
                         <Ptemp>{e}</Ptemp>
-                        {/* <button onClick={(e)=>handleTempDelete(e)}>x</button> */}
-                    </div>
+                        <ButtonX onClick={()=>handleTempDelete(e)}>x</ButtonX>
+                    </Div2>
                                    
                     )}
             </DivTemp>
@@ -329,4 +341,3 @@ function validate(input) { // declaro una funcion del form de cada uno de los in
 // <select> onChange.. llama a la fcion handleOn Selector. El mapeo es para armar la lista de temperamentos y q el usuario pueda elegir entre las distintas opciones 
 // EN el <ul><li> renderizas la seleccion del usuario.  Lo saque a la bosta
  
-{/* <ul><li>{input.temperament.map( (e) =>  e +"  " )}</li></ul>  */}

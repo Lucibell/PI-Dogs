@@ -52,15 +52,17 @@ export default function rootReducer(state= initialState, action) {
 
         case "TEMP_FILTER":
             const dogs = state.allDogs
-            let temp_filtered = dogs.filter(e => {
+            let temp_filtered = dogs.filter((e) => {
+                
                 if (e.temperament) { // bendito filtro.. esta es para la info de la Api
                     return e.temperament.includes(action.payload) // Como es un string queremos q incluya al payload
-                }
-                if (e.temperaments) { // esta es para la info de la db. Como viene en un array se mapea por el nombre y si coincide con el payload lo filtra. 
-                    return e.temperaments.map((e) => e.name === action.payload)
-                }
-                return null
-            })
+            }  
+             // esta es para la info de la db. Como viene en un array se mapea por el nombre y si coincide con el payload lo filtra. 
+                if (e.temperaments) {
+                    let tempsDb = e.temperaments.map(e => e.name);
+                    return tempsDb.includes(action.payload);
+            }
+              })
 
             return {
                 ...state,
@@ -70,7 +72,7 @@ export default function rootReducer(state= initialState, action) {
 
         case "ORDER_BY_NAME": {
             let dogsorder = action.payload === "asc" ?
-                state.allDogs.sort(function (a, b) {
+                state.dogsLoaded.sort(function (a, b) { //allDOgs
                     if (a.name > b.name) {
                         return 1
                     }
@@ -80,7 +82,7 @@ export default function rootReducer(state= initialState, action) {
                     return 0
                 }) :
 
-                state.allDogs.sort(function (a, b) {
+                state.dogsLoaded.sort(function (a, b) { //allDogs
                     if (a.name < b.name) {
                         return 1
                     }
@@ -91,7 +93,7 @@ export default function rootReducer(state= initialState, action) {
                 })
                 return {
                     ...state,
-                    allDogs:dogsorder
+                    dogsLoaded:dogsorder // dogsLoaded
                 }
          }
 
@@ -99,29 +101,42 @@ export default function rootReducer(state= initialState, action) {
 
             let dogsorder2 = action.payload === "w.asc" ?
                 state.dogsLoaded.sort(function (a, b) {
-
-                    return (parseInt(a.weight_min) - parseInt(b.weight_min)) 
+                    
+                    return (parseInt(a.weight_min) - parseInt(b.weight_min)) //allDOgs
                 }) :
 
                 state.dogsLoaded.sort(function (a, b) {
 
-                    return (parseInt(b.weight_min) - parseInt(a.weight_min))
+                    return (parseInt(b.weight_min) - parseInt(a.weight_min)) //allDogs
                 })
 
             return {
                 ...state,
-                dogsLoaded: dogsorder2
+                dogsLoaded: dogsorder2 //dogsLoaded
             }
         }
         
+        
+        // case "DELETE_CARD" : {
+                
+        //         let dogse = state.allDogs.filter ((e)=> {
+        //         if(e.createdInDb) { 
+        //             return e.id !== action.payload}
+        //         return null
+                                       
+        //         })
+
+        //     return {
+        //         ...state,
+        //         dogsLoaded: dogse            }
+
+        // }
              
         default:
             return state
-
          
         }}
 
     
 
 
- // falta el filtrado por temperamento y que el back me devuelva los temperamentos. 

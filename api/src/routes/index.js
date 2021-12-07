@@ -4,15 +4,14 @@ const router = express.Router()
 const axios = require('axios');
 const {Dog, Temperament, dog_temperament}= require ('../db.js')
 const {API_KEY} = process.env;
-//const {getAllDogs, getDataApi, getDataDb} = require ('./Controllers')
+
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 
-//const router = Router();
 router.use(express.json())
 
 
-// Funcion para traer la info de la API
+    // Funcion para traer la info de la API
     const getDataApi = async () => {
         const dataDogs= await axios.get('https://api.thedogapi.com/v1/breeds', {
            headers:{'x-api-key': `${API_KEY}`}})
@@ -24,17 +23,17 @@ router.use(express.json())
                 name:e.name,
                 id:e.id,
                 height:e.height.metric,
-                weight_min:e.weight.metric.split(" - ")[0],
+                weight_min:e.weight.metric.split(" - ")[0], // me devuelve el numero en string
                 weight_max:e.weight.metric.split(" - ")[1],
                 life_span:e.life_span,
                 temperament:e.temperament,
                 image:e.image.url,
-                
-            } 
-        })
+            }
+              
+      })
         return dogApi
     }
-    
+
   
     // Funcion para traer la info de la base de datos
     const getDataDb = async () => {
@@ -58,6 +57,8 @@ router.use(express.json())
 
         return totalDogs;
     }
+
+
     
     //Get Query para obtener todas las razas y cdo se pone la raza en la URL  
     router.get('/dogs', async (req, res) => { 

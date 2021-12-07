@@ -9,6 +9,15 @@ const Button = styled.button`
     border-radius: 9999px;
     /* font-weight:bold; */
 
+    &:active {
+        color:white;
+        background-color:#007ac1;
+    }
+
+    &:hover::not(.active) {
+        background-color:#00B6BD;
+    }
+ 
 
 `
 
@@ -33,5 +42,4 @@ function Paginado({allDogs, paginado, dogsPerPage}) {
 
 export default Paginado
 
-//VER BIEN, NO TERMINO DE ENTENDER
 

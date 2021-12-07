@@ -4,7 +4,7 @@ import LandingPage from './components/LandingPage';
 import Home from './components/Home';
 import DogCreate from './components/DogCreate';
 import DogDetail from './components/DogDetail'
-import NavBar from './components/SearchBar';
+//import NavBar from './components/SearchBar';
 
 
 function App() {
